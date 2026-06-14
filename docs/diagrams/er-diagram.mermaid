@@ -1,0 +1,110 @@
+erDiagram
+    USERS {
+        int id PK
+        string name
+        string email
+        string password_hash
+        string role
+        datetime created_at
+        datetime updated_at
+    }
+
+    REGIONS {
+        int id PK
+        string title
+        string federal_district
+        string capital
+        text short_description
+        text full_description
+        json facts
+        text culture
+        text achievements
+        string image_url
+        datetime created_at
+        datetime updated_at
+    }
+
+    PERSONS {
+        int id PK
+        string full_name
+        string category
+        string region
+        text short_bio
+        text contribution
+        text importance
+        string image_url
+        string source
+        datetime created_at
+        datetime updated_at
+    }
+
+    ACHIEVEMENTS {
+        int id PK
+        string title
+        string category
+        text description
+        string year_or_period
+        string image_url
+        string source
+        datetime created_at
+        datetime updated_at
+    }
+
+    QUIZ_QUESTIONS {
+        int id PK
+        text question_text
+        string question_type
+        string image_url
+        string difficulty
+        text explanation
+        datetime created_at
+        datetime updated_at
+    }
+
+    QUIZ_ANSWERS {
+        int id PK
+        int question_id FK
+        text answer_text
+        boolean is_correct
+    }
+
+    QUIZ_RESULTS {
+        int id PK
+        int user_id FK
+        int score
+        int max_score
+        string level
+        datetime completed_at
+    }
+
+    POSTCARDS {
+        int id PK
+        int user_id FK
+        int template_id FK
+        string sender_name
+        text text
+        string image_url
+        datetime created_at
+    }
+
+    POSTCARD_TEMPLATES {
+        int id PK
+        string name
+        string image_url
+        boolean is_active
+        datetime created_at
+    }
+
+    SOURCES {
+        int id PK
+        string title
+        string url
+        text description
+        string content_type
+        datetime created_at
+    }
+
+    USERS ||--o{ QUIZ_RESULTS : "проходит"
+    USERS ||--o{ POSTCARDS : "создаёт"
+    QUIZ_QUESTIONS ||--o{ QUIZ_ANSWERS : "содержит"
+    POSTCARD_TEMPLATES ||--o{ POSTCARDS : "используется в"

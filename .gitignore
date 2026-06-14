@@ -1,0 +1,53 @@
+# ================================
+# .gitignore — Россия в лицах
+# ================================
+
+# --- Секреты (НИКОГДА не коммитить!) ---
+.env
+*.key
+*.pem
+secrets/
+
+# --- Python ---
+__pycache__/
+*.py[cod]
+*.pyo
+.venv/
+venv/
+env/
+*.egg-info/
+dist/
+build/
+.pytest_cache/
+.mypy_cache/
+
+# --- Node.js ---
+node_modules/
+dist/
+.next/
+.nuxt/
+*.local
+
+# --- База данных ---
+*.db
+*.sqlite
+*.sqlite3
+
+# --- Загруженные файлы ---
+uploads/
+media/
+
+# --- Логи ---
+*.log
+logs/
+
+# --- IDE ---
+.idea/
+.vscode/
+*.swp
+*.swo
+.DS_Store
+Thumbs.db
+
+# --- Docker ---
+*.override.yml
