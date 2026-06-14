@@ -41,7 +41,7 @@
 
 ```bash
 # 1. Клонировать репозиторий
-git clone https://github.com/ВАШ-ЮЗЕРНЕйМ/russia-v-licah.git
+git clone https://github.com/Hellondd/RF_V_LICAH/tree/dev
 cd russia-v-licah
 
 # 2. Скопировать файл конфигурации
@@ -49,14 +49,16 @@ cp .env.example .env
 # Заполните .env своими данными
 
 # 3. Запустить backend
-cd backend
-pip install -r requirements.txt
-python main.py
+Из корневой папки проекта (там, где лежит docker-compose.yml) выполните:
 
-# 4. В новом терминале — запустить frontend
-cd frontend
-npm install
-npm run dev
+docker-compose up --build
+
+# 4. Проверьте, что всё работает
+Откройте браузер и перейдите по адресу:
+http://localhost:8000/api/v1/health
+Должны увидеть:
+{"status":"ok"}
+
 ```
 
 ### Запуск через Docker (если настроен)
