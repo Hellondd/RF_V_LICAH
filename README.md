@@ -168,12 +168,3 @@ pytest
 
 ---
 
-## 📝 Источники информации
-
-Список источников: [docs/sources.md](docs/sources.md)
-
----
-
-## ⚖️ Лицензия
-
-MIT — подробнее в файле [LICENSE](LICENSE)
