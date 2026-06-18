@@ -4,8 +4,8 @@ from app.api.v1 import router as api_router
 from app.config import settings
 from app.database import engine, Base
 from app.core.logging import setup_logging
+import app.models  # noqa: F401 — регистрация моделей в metadata
 
-# Создаём таблицы (пока пустые, но база будет готова)
 Base.metadata.create_all(bind=engine)
 
 setup_logging()

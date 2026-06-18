@@ -1,20 +1,26 @@
-# ⚠️ ВНИМАНИЕ: этот файл содержит только заготовки.
-# Реализацию функций должен дописать backend-разработчик,
-# используя passlib[bcrypt] и python-jose.
+from datetime import datetime, timedelta, timezone
+from typing import Optional
 
+from jose import jwt
 from passlib.context import CryptContext
+
+from app.config import settings
 
 pwd_context = CryptContext(schemes=["bcrypt"], deprecated="auto")
 
+
 def get_password_hash(password: str) -> str:
-    """TODO: реализовать хеширование пароля"""
-    # Пример: return pwd_context.hash(password)
-    raise NotImplementedError("Backend developer must implement this")
+    return pwd_context.hash(password)
+
 
 def verify_password(plain_password: str, hashed_password: str) -> bool:
-    """TODO: реализовать проверку пароля"""
-    raise NotImplementedError("Backend developer must implement this")
+    return pwd_context.verify(plain_password, hashed_password)
 
-def create_access_token(data: dict, expires_delta=None):
-    """TODO: реализовать создание JWT"""
-    raise NotImplementedError("Backend developer must implement this")
+
+def create_access_token(data: dict, expires_delta: Optional[timedelta] = None) -> str:
+    to_encode = data.copy()
+    expire = datetime.now(timezone.utc) + (
+        expires_delta or timedelta(minutes=settings.ACCESS_TOKEN_EXPIRE_MINUTES)
+    )
+    to_encode.update({"exp": expire})
+    return jwt.encode(to_encode, settings.SECRET_KEY, algorithm=settings.JWT_ALGORITHM)

@@ -120,17 +120,20 @@ russia-v-licah/
 Основные маршруты:
 
 ```
-POST   /api/auth/register
-POST   /api/auth/login
-GET    /api/regions
-GET    /api/regions/:id
-GET    /api/persons
-GET    /api/achievements
-GET    /api/quiz/questions
-POST   /api/quiz/submit
-GET    /api/postcards/templates
-POST   /api/postcards
-GET    /api/admin/stats
+POST   /api/v1/auth/register
+POST   /api/v1/auth/login
+GET    /api/v1/auth/me
+GET    /api/v1/regions
+GET    /api/v1/regions/{id}
+GET    /api/v1/persons?category=
+GET    /api/v1/achievements?category=
+GET    /api/v1/quiz/questions
+POST   /api/v1/quiz/submit
+GET    /api/v1/quiz/leaderboard
+GET    /api/v1/postcards/templates
+POST   /api/v1/postcards
+GET    /api/v1/admin/stats
+POST   /api/v1/upload
 ```
 
 Подробнее: [docs/api.md](docs/api.md)
