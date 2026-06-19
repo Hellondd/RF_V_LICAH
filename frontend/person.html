@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Персоналия — Россия в лицах</title>
+    <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+    <header>
+        <nav class="nav-container">
+            <a href="index.html" class="logo"><div class="logo-flag"></div>Россия в лицах</a>
+            <ul class="nav-menu">
+                <li><a href="index.html">Главная</a></li>
+                <li><a href="history.html">История</a></li>
+                <li><a href="regions.html">Регионы</a></li>
+                <li><a href="persons.html">Лица</a></li>
+                <li><a href="achievements.html">Достижения</a></li>
+                <li><a href="multinational.html">Многонациональная</a></li>
+                <li><a href="quiz.html">Викторина</a></li>
+                <li><a href="postcard.html">Открытка</a></li>
+                <li><a href="persons.html">← Назад</a></li>
+            </ul>
+            <div id="navUserArea" class="nav-actions"></div>
+        </nav>
+    </header>
+    <main id="personContent"><div class="empty-state">Загрузка...</div></main>
+    <footer><p>© 2026 Студенческая проектная группа. Производственная практика.</p></footer>
+    <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+    <script src="js/api.js"></script>
+    <script src="js/auth.js"></script>
+    <script>
+        const id = new URLSearchParams(location.search).get('id');
+        if (!id) location.href = 'persons.html';
+        api.get(`/persons/${id}`).then(({ data: p }) => {
+            document.getElementById('personContent').innerHTML = `
+                <div class="card"><div class="card-content">
+                    <span class="card-tag">${p.category}</span>
+                    <h1>${p.full_name}</h1>
+                    <p><strong>Регион:</strong> ${p.region || '—'}</p>
+                    <p>${p.short_bio}</p>
+                    ${p.contribution ? `<h3>Вклад</h3><p>${p.contribution}</p>` : ''}
+                    ${p.importance ? `<h3>Значение</h3><p>${p.importance}</p>` : ''}
+                    ${p.source ? `<p><small>Источник: <a href="${p.source}" target="_blank">${p.source}</a></small></p>` : ''}
+                </div></div>`;
+            document.title = p.full_name + ' — Россия в лицах';
+        }).catch(() => {
+            document.getElementById('personContent').innerHTML = '<div class="empty-state">Персоналия не найдена</div>';
+        });
+    </script>
+</body>
+</html>

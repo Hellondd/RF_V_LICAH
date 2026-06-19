@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Личный кабинет — Россия в лицах</title>
+    <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+    <header>
+        <nav class="nav-container">
+            <a href="index.html" class="logo">
+                <div class="logo-flag"></div>
+                Россия в лицах
+            </a>
+            <ul class="nav-menu">
+                <li><a href="index.html">Главная</a></li>
+                <li><a href="history.html">История</a></li>
+                <li><a href="regions.html">Регионы</a></li>
+                <li><a href="persons.html">Лица</a></li>
+                <li><a href="achievements.html">Достижения</a></li>
+                <li><a href="multinational.html">Многонациональная</a></li>
+                <li><a href="quiz.html">Викторина</a></li>
+                <li><a href="postcard.html">Открытка</a></li>
+            </ul>
+            <div id="navUserArea" class="nav-actions"></div>
+        </nav>
+    </header>
+
+    <main>
+        <div class="cabinet-header">
+            <h1>Личный кабинет</h1>
+            <p id="userInfo">Загрузка...</p>
+        </div>
+
+        <div class="cabinet-tabs">
+            <button class="cabinet-tab active" data-tab="quiz">Результаты викторины</button>
+            <button class="cabinet-tab" data-tab="postcards">Мои открытки</button>
+        </div>
+
+        <section id="tab-quiz" class="cabinet-section active">
+            <table class="data-table">
+                <thead>
+                    <tr>
+                        <th>Дата</th>
+                        <th>Баллы</th>
+                        <th>Максимум</th>
+                        <th>Уровень</th>
+                    </tr>
+                </thead>
+                <tbody id="quizResultsBody">
+                    <tr><td colspan="4" class="empty-state">Загрузка...</td></tr>
+                </tbody>
+            </table>
+        </section>
+
+        <section id="tab-postcards" class="cabinet-section">
+            <div id="postcardsList" class="grid">
+                <div class="empty-state">Загрузка...</div>
+            </div>
+        </section>
+    </main>
+
+    <footer><p>© 2026 Студенческая проектная группа. Производственная практика.</p></footer>
+
+    <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+    <script src="js/api.js"></script>
+    <script src="js/auth.js"></script>
+    <script>
+        if (!Auth.requireAuth()) throw new Error('auth required');
+
+        document.querySelectorAll('.cabinet-tab').forEach((tab) => {
+            tab.addEventListener('click', () => {
+                document.querySelectorAll('.cabinet-tab').forEach((t) => t.classList.remove('active'));
+                document.querySelectorAll('.cabinet-section').forEach((s) => s.classList.remove('active'));
+                tab.classList.add('active');
+                document.getElementById(`tab-${tab.dataset.tab}`).classList.add('active');
+            });
+        });
+
+        async function loadCabinet() {
+            const user = Auth.getUser();
+            document.getElementById('userInfo').textContent = `${user.name} (${user.email}) — роль: ${user.role}`;
+
+            try {
+                const { data: results } = await api.get('/quiz/results');
+                const tbody = document.getElementById('quizResultsBody');
+                if (results.length === 0) {
+                    tbody.innerHTML = '<tr><td colspan="4" class="empty-state">Вы ещё не проходили викторину. <a href="quiz.html">Пройти</a></td></tr>';
+                } else {
+                    tbody.innerHTML = results.map((r) => `
+                        <tr>
+                            <td>${new Date(r.completed_at).toLocaleString('ru-RU')}</td>
+                            <td>${r.score}</td>
+                            <td>${r.max_score}</td>
+                            <td>${r.level}</td>
+                        </tr>
+                    `).join('');
+                }
+            } catch {
+                document.getElementById('quizResultsBody').innerHTML =
+                    '<tr><td colspan="4" class="empty-state">Не удалось загрузить результаты</td></tr>';
+            }
+
+            try {
+                const { data: postcards } = await api.get('/postcards/my');
+                const container = document.getElementById('postcardsList');
+                if (postcards.length === 0) {
+                    container.innerHTML = '<div class="empty-state">У вас пока нет открыток. <a href="postcard.html">Создать</a></div>';
+                } else {
+                    container.innerHTML = postcards.map((p) => `
+                        <div class="card">
+                            <div class="card-content">
+                                <span class="card-tag">Открытка #${p.id}</span>
+                                <h3>${p.sender_name}</h3>
+                                <p>${p.text}</p>
+                                <small>${new Date(p.created_at).toLocaleString('ru-RU')}</small>
+                            </div>
+                        </div>
+                    `).join('');
+                }
+            } catch {
+                document.getElementById('postcardsList').innerHTML =
+                    '<div class="empty-state">Не удалось загрузить открытки</div>';
+            }
+        }
+
+        loadCabinet();
+    </script>
+</body>
+</html>

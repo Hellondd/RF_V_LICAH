@@ -1,17 +1,20 @@
 from fastapi import FastAPI
+from fastapi.staticfiles import StaticFiles
 from fastapi.middleware.cors import CORSMiddleware
 from app.api.v1 import router as api_router
 from app.config import settings
 from app.database import engine, Base
 from app.core.logging import setup_logging
+import app.models  # noqa: F401
 
-# Создаём таблицы (пока пустые, но база будет готова)
-Base.metadata.create_all(bind=engine)
+# Создаём таблицы (если их нет) — но мы уже отключили, оставим на всякий случай
+# Base.metadata.create_all(bind=engine)
 
 setup_logging()
 
 app = FastAPI(title="Russia v Licah API", version="1.0.0")
 
+# CORS
 app.add_middleware(
     CORSMiddleware,
     allow_origins=[settings.FRONTEND_URL, "http://localhost:5173"],
@@ -20,8 +23,14 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
+# Подключаем API
 app.include_router(api_router)
 
+# Монтируем папку frontend как статику
+app.mount("/", StaticFiles(directory="frontend", html=True), name="frontend")
+
+# Дополнительный корневой эндпоинт на случай, если статика не сработает
 @app.get("/")
 def root():
-    return {"message": "Russia v Licah API — skeleton ready. See /api/v1/health"}
+    from fastapi.responses import FileResponse
+    return FileResponse("frontend/index.html")

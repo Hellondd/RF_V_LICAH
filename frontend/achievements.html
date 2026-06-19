@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Достижения России</title>
+    <link rel="stylesheet" href="css/style.css">
+    <style>
+        .hero-section { background: #255b8f; color: white; text-align: center; padding: 70px 40px; border-radius: 16px; margin-bottom: 30px; }
+        .hero-section h1 { font-size: 48px; margin-bottom: 15px; }
+        .hero-section p { font-size: 20px; max-width: 700px; margin: 0 auto; }
+        .filters { display: flex; gap: 12px; margin-bottom: 30px; flex-wrap: wrap; }
+        .filter-btn { padding: 12px 24px; border: 1px solid #255b8f; background: white; color: #255b8f; border-radius: 999px; cursor: pointer; font-weight: 600; }
+        .filter-btn.active { background: #255b8f; color: white; }
+        .achievements-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(320px, 1fr)); gap: 25px; margin-bottom: 40px; }
+        .achievement-card { background: white; border-radius: 16px; padding: 25px; border-top: 5px solid #255b8f; box-shadow: 0 4px 12px rgba(0,0,0,.06); }
+        .badge { display: inline-block; background: #e9f1fb; color: #255b8f; padding: 6px 12px; border-radius: 6px; font-size: 14px; font-weight: 600; margin-bottom: 15px; }
+        .achievement-card h3 { font-size: 32px; margin-bottom: 10px; color: #24496e; }
+        .highlight { color: #d94141; font-weight: 600; margin-bottom: 15px; }
+        .achievement-card p { line-height: 1.8; }
+        .final-banner { background: #255b8f; color: white; text-align: center; padding: 50px 30px; border-radius: 16px; }
+        .final-banner h2 { margin-bottom: 15px; font-size: 34px; }
+        .final-banner p { max-width: 800px; margin: auto; line-height: 1.8; }
+    </style>
+</head>
+<body>
+    <header>
+        <nav class="nav-container">
+            <a href="index.html" class="logo"><div class="logo-flag"></div>Россия в лицах</a>
+            <ul class="nav-menu">
+                <li><a href="index.html">Главная</a></li>
+                <li><a href="history.html">История</a></li>
+                <li><a href="regions.html">Регионы</a></li>
+                <li><a href="persons.html">Лица</a></li>
+                <li><a href="achievements.html" class="active">Достижения</a></li>
+                <li><a href="multinational.html">Многонациональная</a></li>
+                <li><a href="quiz.html">Викторина</a></li>
+                <li><a href="postcard.html">Открытка</a></li>
+            </ul>
+            <div id="navUserArea" class="nav-actions"></div>
+        </nav>
+    </header>
+
+    <main>
+        <section class="hero-section">
+            <h1>Достижения России</h1>
+            <p>Наука, космос, медицина и технологии — ключевые достижения, которыми гордится Россия.</p>
+        </section>
+
+        <div class="filters">
+            <button class="filter-btn active" data-filter="all">Все</button>
+            <button class="filter-btn" data-filter="space">Космос</button>
+            <button class="filter-btn" data-filter="science">Наука</button>
+            <button class="filter-btn" data-filter="medicine">Медицина</button>
+            <button class="filter-btn" data-filter="tech">Технологии</button>
+        </div>
+
+        <div class="achievements-grid">
+            <!-- Карточки (все 6) -->
+            <div class="achievement-card" data-category="space">
+                <span class="badge">Космос</span>
+                <h3>Первый человек в космосе</h3>
+                <p class="highlight">Юрий Гагарин, 12 апреля 1961 года</p>
+                <p>Полёт Юрия Гагарина на корабле «Восток-1» стал историческим событием мирового масштаба и открыл человечеству эпоху освоения космоса. Впервые человек совершил орбитальный полёт вокруг Земли, доказав возможность пребывания человека в космическом пространстве.</p>
+                <p>Это достижение стало символом научного и технологического прорыва страны и укрепило позиции отечественной космонавтики на десятилетия вперёд.</p>
+            </div>
+            <div class="achievement-card" data-category="space">
+                <span class="badge">Космос</span>
+                <h3>Первый искусственный спутник Земли</h3>
+                <p class="highlight">Спутник-1, 1957 год</p>
+                <p>Запуск первого искусственного спутника Земли ознаменовал начало космической эры человечества. Аппарат был выведен на орбиту и передавал радиосигналы, которые могли принимать учёные по всему миру.</p>
+                <p>Это событие доказало возможность освоения космоса и стало фундаментом для дальнейших исследований и развития мировой космонавтики.</p>
+            </div>
+            <div class="achievement-card" data-category="science">
+                <span class="badge">Наука</span>
+                <h3>Периодическая система химических элементов</h3>
+                <p class="highlight">Дмитрий Менделеев</p>
+                <p>Создание периодической системы элементов стало одним из важнейших достижений мировой науки. Дмитрий Менделеев систематизировал химические элементы, выявив фундаментальные закономерности их свойств.</p>
+                <p>Его таблица не только упорядочила уже известные элементы, но и позволила предсказать существование новых, которые впоследствии были открыты экспериментально.</p>
+            </div>
+            <div class="achievement-card" data-category="medicine">
+                <span class="badge">Медицина</span>
+                <h3>Развитие военно-полевой хирургии</h3>
+                <p class="highlight">Николай Пирогов</p>
+                <p>Николай Пирогов внёс фундаментальный вклад в развитие мировой медицины и хирургии. Он впервые системно применил методы анестезии в полевых условиях и разработал новые подходы к лечению раненых.</p>
+                <p>Его методы позволили значительно повысить выживаемость в условиях военных конфликтов и стали основой современной военно-полевой хирургии.</p>
+            </div>
+            <div class="achievement-card" data-category="tech">
+                <span class="badge">Технологии</span>
+                <h3>Первая в мире атомная электростанция</h3>
+                <p class="highlight">Обнинск, 1954 год</p>
+                <p>В городе Обнинске была запущена первая в мире атомная электростанция, начавшая выработку электроэнергии для промышленной сети. Это стало первым шагом в использовании атомной энергии в мирных целях.</p>
+                <p>Данное достижение открыло новую эпоху в энергетике и стало важным этапом технологического развития человечества.</p>
+            </div>
+            <div class="achievement-card" data-category="tech">
+                <span class="badge">Технологии</span>
+                <h3>Ледокольный атомный флот России</h3>
+                <p class="highlight">Мировое лидерство</p>
+                <p>Россия обладает крупнейшим атомным ледокольным флотом в мире, обеспечивающим навигацию в условиях Арктики и Северного морского пути.</p>
+                <p>Эти суда позволяют развивать транспортные маршруты, поддерживать научные экспедиции и обеспечивать стратегическое присутствие в северных регионах.</p>
+            </div>
+        </div>
+
+        <section class="final-banner">
+            <h2>Россия продолжает развиваться</h2>
+            <p>Современные научные исследования, космические программы и технологические разработки формируют будущее страны.</p>
+        </section>
+    </main>
+
+    <footer>
+        <p>© 2026 Студенческая проектная группа. Производственная практика.</p>
+    </footer>
+
+    <script>
+        document.querySelectorAll('.filter-btn').forEach(btn => {
+            btn.addEventListener('click', function() {
+                document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
+                this.classList.add('active');
+                const filter = this.dataset.filter;
+                document.querySelectorAll('.achievement-card').forEach(card => {
+                    card.style.display = (filter === 'all' || card.dataset.category === filter) ? 'block' : 'none';
+                });
+            });
+        });
+    </script>
+    <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+    <script src="js/api.js"></script>
+    <script src="js/auth.js"></script>
+    <script>Auth.updateNav();</script>
+</body>
+</html>

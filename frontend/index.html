@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Россия в лицах - Цифровой гид ко Дню России</title>
+    <link rel="stylesheet" href="css/style.css">
+    <style>
+        .hero {
+            background: linear-gradient(135deg, #1f4e79 0%, #2c6aa0 100%);
+            color: white;
+            padding: 60px 40px;
+            border-radius: var(--border-radius);
+            text-align: center;
+            margin-bottom: 40px;
+        }
+        .hero h1 { font-size: 3rem; margin-bottom: 10px; }
+        .hero p { font-size: 1.2rem; opacity: 0.9; }
+        .about-block { background: white; padding: 30px; border-radius: var(--border-radius); box-shadow: var(--shadow); margin-bottom: 40px; }
+        .about-block h2 { color: var(--primary-blue); margin-bottom: 12px; }
+    </style>
+</head>
+<body>
+
+    <header>
+        <nav class="nav-container">
+            <a href="index.html" class="logo">
+                <div class="logo-flag"></div>
+                Россия в лицах
+            </a>
+            <ul class="nav-menu">
+                <li><a href="index.html">Главная</a></li>
+                <li><a href="history.html">История</a></li>
+                <li><a href="regions.html">Регионы</a></li>
+                <li><a href="persons.html">Лица</a></li>
+                <li><a href="achievements.html">Достижения</a></li>
+                <li><a href="multinational.html">Многонациональная</a></li>
+                <li><a href="quiz.html">Викторина</a></li>
+                <li><a href="postcard.html">Открытка</a></li>
+            </ul>
+            <div id="navUserArea" class="nav-actions"></div>
+        </nav>
+    </header>
+
+    <main>
+        <section class="hero">
+            <h1>Россия в лицах</h1>
+            <p>Интерактивный цифровой гид ко Дню России</p>
+            <div class="btn-group-flag">
+                <a href="history.html" class="btn-flag btn-white">История</a>
+                <a href="regions.html" class="btn-flag btn-blue">Регионы</a>
+                <a href="persons.html" class="btn-flag btn-red">Лица</a>
+                <a href="achievements.html" class="btn-flag btn-white">Достижения</a>
+                <a href="multinational.html" class="btn-flag btn-blue">Многонациональная</a>
+                <a href="quiz.html" class="btn-flag btn-red">Викторина</a>
+                <a href="postcard.html" class="btn-flag btn-white">Открытка</a>
+            </div>
+        </section>
+
+        <section class="about-block">
+            <h2>Официальный статус праздника</h2>
+            <p>12 июня - государственный праздник Российской Федерации. Эта дата зафиксирована в статье 112 Трудового кодекса РФ как праздничный нерабочий день. Проект создан для демонстрации ключевых исторических вех, географического охвата и достижений граждан России в сфере науки, медицины и высоких технологий.</p>
+        </section>
+
+        <section>
+            <h2 style="text-align: center; margin-bottom: 10px;">Сегодня Россия в цифрах и фактах</h2>
+            <div class="grid">
+                <div class="card"><div class="card-content"><h3>Масштаб</h3><p>Самое большое государство мира, площадь территории составляет 17.1 млн кв. км.</p></div></div>
+                <div class="card"><div class="card-content"><h3>Регионы</h3><p>89 субъектов федерации, включая республики, края, области и города федерального значения.</p></div></div>
+                <div class="card"><div class="card-content"><h3>Культура</h3><p>Более 190 народов, говорящих на десятках языков и сохраняющих свои традиции.</p></div></div>
+                <div class="card"><div class="card-content"><h3>Наука</h3><p>Родина первооткрывателей космоса, создателей мирного атома и лазерных технологий.</p></div></div>
+                <div class="card"><div class="card-content"><h3>Образование</h3><p>Более 4.8 млн студентов обучаются в российских вузах и колледжах.</p></div></div>
+                <div class="card"><div class="card-content"><h3>Природа</h3><p>На территории страны находится озеро Байкал - самый глубокий пресноводный водоем планеты.</p></div></div>
+            </div>
+        </section>
+    </main>
+
+    <footer>
+        <p>© 2026 Студенческая проектная группа. Производственная практика.</p>
+    </footer>
+
+    <button class="ai-fab" id="aiFab" title="ИИ-помощник">💬</button>
+    <div class="ai-modal" id="aiModal">
+        <div class="ai-modal-header">ИИ-помощник</div>
+        <div class="ai-modal-body" id="aiBody">
+            <div class="ai-quick-btns">
+                <button>День России</button>
+                <button>Регионы</button>
+                <button>Викторина</button>
+                <button>Поздравление</button>
+                <button>Помощь</button>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+    <script src="js/api.js"></script>
+    <script src="js/auth.js"></script>
+    <script src="js/search.js"></script>
+    <script src="js/ai-assistant.js"></script>
+</body>
+</html>

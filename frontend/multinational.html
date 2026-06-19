@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Многонациональная Россия</title>
+    <link rel="stylesheet" href="css/style.css">
+    <style>
+        .hero-section {
+            background: #255b8f;
+            color: white;
+            text-align: center;
+            padding: 70px 40px;
+            border-radius: 16px;
+            margin-bottom: 30px;
+            box-shadow: 0 4px 12px rgba(0,0,0,.08);
+        }
+        .hero-section h1 { font-size: 52px; margin-bottom: 20px; font-weight: 700; }
+        .hero-section p { max-width: 800px; margin: 0 auto; font-size: 20px; line-height: 1.7; opacity: .95; }
+        .hero-buttons { display: flex; justify-content: center; gap: 15px; margin-top: 35px; flex-wrap: wrap; }
+        .hero-buttons button { border: none; border-radius: 10px; padding: 14px 26px; font-size: 15px; font-weight: 600; background: white; color: #255b8f; cursor: default; }
+        .content-section { background: white; border-radius: 16px; padding: 35px; margin-bottom: 30px; box-shadow: 0 4px 12px rgba(0,0,0,.05); }
+        .content-section h2 { color: #24496e; margin-bottom: 20px; font-size: 34px; }
+        .content-section p { font-size: 18px; line-height: 1.9; color: #444; margin-bottom: 15px; }
+        .numbers-section { display: flex; justify-content: space-between; gap: 20px; margin-bottom: 30px; flex-wrap: wrap; }
+        .number-item { flex: 1; min-width: 250px; background: white; padding: 35px; border-radius: 16px; text-align: center; border-top: 5px solid #255b8f; box-shadow: 0 4px 12px rgba(0,0,0,.05); }
+        .number-item span { display: block; font-size: 52px; font-weight: 700; color: #d94141; margin-bottom: 10px; }
+        .number-item p { font-size: 17px; color: #555; line-height: 1.6; }
+        .culture-list { margin-top: 20px; padding-left: 20px; }
+        .culture-list li { margin-bottom: 12px; font-size: 18px; line-height: 1.7; }
+        .quote-section { background: #255b8f; color: white; text-align: center; padding: 50px 30px; border-radius: 16px; margin-bottom: 20px; }
+        .quote-section h2 { font-size: 36px; margin-bottom: 15px; }
+        .quote-section p { max-width: 800px; margin: 0 auto; font-size: 18px; line-height: 1.8; }
+        @media (max-width: 768px) {
+            .hero-section h1 { font-size: 38px; }
+            .content-section h2 { font-size: 28px; }
+            .number-item span { font-size: 40px; }
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <nav class="nav-container">
+            <a href="index.html" class="logo"><div class="logo-flag"></div>Россия в лицах</a>
+            <ul class="nav-menu">
+                <li><a href="index.html">Главная</a></li>
+                <li><a href="history.html">История</a></li>
+                <li><a href="regions.html">Регионы</a></li>
+                <li><a href="persons.html">Лица</a></li>
+                <li><a href="achievements.html">Достижения</a></li>
+                <li><a href="multinational.html" class="active">Многонациональная</a></li>
+                <li><a href="quiz.html">Викторина</a></li>
+                <li><a href="postcard.html">Открытка</a></li>
+            </ul>
+            <div id="navUserArea" class="nav-actions"></div>
+        </nav>
+    </header>
+
+    <main>
+        <!-- Всё содержимое без изменений -->
+        <section class="hero-section">
+            <h1>Многонациональная Россия</h1>
+            <p>Россия — один из крупнейших многонациональных домов мира, объединяющий более 190 народов, десятки языков и богатое культурное наследие.</p>
+            <div class="hero-buttons">
+                <button>190+ Народов</button>
+                <button>100+ Языков</button>
+                <button>Единая Страна</button>
+            </div>
+        </section>
+
+        <section class="content-section">
+            <h2>Единство в многообразии</h2>
+            <p>Российская Федерация является одним из самых многонациональных государств мира. На её территории проживают представители более 190 народов и этнических групп, каждый из которых внёс свой вклад в развитие культуры, науки, экономики и государственности страны.</p>
+            <p>Многообразие традиций, языков и обычаев формировалось на протяжении многих веков. Сегодня это культурное богатство является важной частью национальной идентичности России и способствует укреплению взаимного уважения между народами.</p>
+        </section>
+
+        <section class="numbers-section">
+            <div class="number-item">
+                <span>190+</span>
+                <p>народов проживает на территории России</p>
+            </div>
+            <div class="number-item">
+                <span>100+</span>
+                <p>языков и диалектов используются жителями страны</p>
+            </div>
+            <div class="number-item">
+                <span>89</span>
+                <p>регионов объединены в единое государство</p>
+            </div>
+        </section>
+
+        <section class="content-section">
+            <h2>Культурное наследие народов России</h2>
+            <p>Каждому народу присущи собственные традиции, праздники, народные промыслы, музыкальные и танцевальные направления. Это многообразие делает культуру России одной из самых богатых и самобытных в мире.</p>
+            <ul class="culture-list">
+                <li>Народные праздники и обряды</li>
+                <li>Национальные костюмы и ремёсла</li>
+                <li>Традиционная кухня народов России</li>
+                <li>Уникальные языки и письменность</li>
+                <li>Музыкальное и танцевальное наследие</li>
+                <li>Исторические традиции регионов</li>
+            </ul>
+        </section>
+
+        <section class="quote-section">
+            <h2>Сила России — в единстве её народов</h2>
+            <p>Несмотря на различия в культуре, языке и традициях, все народы России объединяет общая история, взаимное уважение и стремление к развитию страны.</p>
+        </section>
+    </main>
+
+    <footer>
+        <p>© 2026 Студенческая проектная группа. Производственная практика.</p>
+    </footer>
+
+    <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+    <script src="js/api.js"></script>
+    <script src="js/auth.js"></script>
+    <script>Auth.updateNav();</script>
+</body>
+</html>

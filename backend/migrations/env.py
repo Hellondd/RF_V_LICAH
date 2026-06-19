@@ -7,6 +7,8 @@ from pathlib import Path
 sys.path.append(str(Path(__file__).parent.parent))
 from app.database import Base
 from app.config import settings
+# без импорта моделей autogenerate не увидит таблицы
+import app.models  # noqa: F401
 
 config = context.config
 config.set_main_option("sqlalchemy.url", settings.DATABASE_URL)

@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Создание открытки</title>
+    <link rel="stylesheet" href="css/style.css">
+    <style>
+        .postcard-creator { background: #fff; border-radius: 16px; padding: 40px; box-shadow: 0 4px 12px rgba(0,0,0,.05); margin-bottom: 30px; }
+        .postcard-creator h1 { font-size: 40px; margin-bottom: 10px; color: #24496e; }
+        .postcard-creator p { font-size: 18px; line-height: 1.7; color: #555; margin-bottom: 25px; }
+        .creator-grid { display: flex; gap: 30px; flex-wrap: wrap; }
+        .preview-block { flex: 1; min-width: 320px; }
+        .settings-block { flex: 1; min-width: 320px; }
+        canvas { width: 100%; border-radius: 12px; border: 2px solid #ddd; background: #f8f8f8; margin-bottom: 15px; }
+        button { background: #255b8f; color: white; border: none; padding: 12px 20px; border-radius: 10px; font-size: 16px; cursor: pointer; }
+        button:hover { background: #1f4a73; }
+        label { display: block; margin-top: 15px; margin-bottom: 5px; font-weight: 600; color: #333; }
+        input, textarea, select { width: 100%; padding: 10px; border-radius: 10px; border: 1px solid #ccc; font-size: 15px; }
+        textarea { min-height: 120px; resize: vertical; }
+    </style>
+</head>
+<body>
+    <header>
+        <nav class="nav-container">
+            <a href="index.html" class="logo"><div class="logo-flag"></div>Россия в лицах</a>
+            <ul class="nav-menu">
+                <li><a href="index.html">Главная</a></li>
+                <li><a href="history.html">История</a></li>
+                <li><a href="regions.html">Регионы</a></li>
+                <li><a href="persons.html">Лица</a></li>
+                <li><a href="achievements.html">Достижения</a></li>
+                <li><a href="multinational.html">Многонациональная</a></li>
+                <li><a href="quiz.html">Викторина</a></li>
+                <li><a href="postcard.html" class="active">Открытка</a></li>
+            </ul>
+            <div id="navUserArea" class="nav-actions"></div>
+        </nav>
+    </header>
+
+    <main>
+        <section class="postcard-creator">
+            <h1>Создание открытки</h1>
+            <p>Выберите шаблон открытки, добавьте текст и создайте персонализированное изображение, которое можно скачать и использовать.</p>
+
+            <div class="creator-grid">
+                <div class="preview-block">
+                    <h2>Предпросмотр</h2>
+                    <canvas id="postcardCanvas" width="800" height="500"></canvas>
+                    <button onclick="downloadPostcard()">Скачать открытку</button>
+                </div>
+                <div class="settings-block">
+                    <h2>Настройки</h2>
+                    <label>Выберите шаблон:</label>
+                    <select id="templateSelect" onchange="updatePostcard()">
+                        <option value="classic">Классический</option>
+                        <option value="blue">Синий официальный</option>
+                    </select>
+                    <label>Заголовок:</label>
+                    <input type="text" id="titleInput" placeholder="С праздником!" oninput="updatePostcard()">
+                    <label>Основной текст:</label>
+                    <textarea id="textInput" placeholder="Введите текст открытки..." oninput="updatePostcard()"></textarea>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <footer>
+        <p>© 2026 Студенческая проектная группа. Производственная практика.</p>
+    </footer>
+
+    <script>
+        const canvas = document.getElementById("postcardCanvas");
+        const ctx = canvas.getContext("2d");
+
+        function updatePostcard() {
+            const template = document.getElementById("templateSelect").value;
+            const title = document.getElementById("titleInput").value;
+            const text = document.getElementById("textInput").value;
+
+            ctx.fillStyle = template === "classic" ? "#ffffff" : "#255b8f";
+            ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+            ctx.fillStyle = template === "classic" ? "#222" : "white";
+            ctx.font = "bold 36px Arial";
+            ctx.fillText(title || "Ваша открытка", 40, 80);
+
+            ctx.font = "20px Arial";
+            wrapText(ctx, text || "Введите текст открытки справа", 40, 140, 720, 28);
+        }
+
+        function wrapText(ctx, text, x, y, maxWidth, lineHeight) {
+            const words = text.split(" ");
+            let line = "";
+            for (let n = 0; n < words.length; n++) {
+                let testLine = line + words[n] + " ";
+                if (ctx.measureText(testLine).width > maxWidth && n > 0) {
+                    ctx.fillText(line, x, y);
+                    line = words[n] + " ";
+                    y += lineHeight;
+                } else {
+                    line = testLine;
+                }
+            }
+            ctx.fillText(line, x, y);
+        }
+
+        function downloadPostcard() {
+            const link = document.createElement("a");
+            link.download = "postcard.png";
+            link.href = canvas.toDataURL("image/png");
+            link.click();
+        }
+
+        updatePostcard();
+    </script>
+    <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+    <script src="js/api.js"></script>
+    <script src="js/auth.js"></script>
+    <script>Auth.updateNav();</script>
+</body>
+</html>

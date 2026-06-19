@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Админ-панель — Россия в лицах</title>
+    <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+    <header>
+        <nav class="nav-container">
+            <a href="index.html" class="logo">
+                <div class="logo-flag"></div>
+                Россия в лицах
+            </a>
+            <ul class="nav-menu">
+                <li><a href="index.html">Главная</a></li>
+                <li><a href="history.html">История</a></li>
+                <li><a href="regions.html">Регионы</a></li>
+                <li><a href="persons.html">Лица</a></li>
+                <li><a href="achievements.html">Достижения</a></li>
+                <li><a href="multinational.html">Многонациональная</a></li>
+                <li><a href="quiz.html">Викторина</a></li>
+                <li><a href="postcard.html">Открытка</a></li>
+            </ul>
+            <div id="navUserArea" class="nav-actions"></div>
+        </nav>
+    </header>
+
+    <main>
+        <h1 style="margin-bottom:24px;color:var(--primary-blue)">Административная панель</h1>
+
+        <div id="statsGrid" class="stats-grid">
+            <div class="stat-card"><div class="number">—</div><div>Пользователи</div></div>
+        </div>
+
+        <h2 style="margin-bottom:16px">Пользователи</h2>
+        <table class="data-table">
+            <thead>
+                <tr><th>ID</th><th>Имя</th><th>Email</th><th>Роль</th><th>Дата регистрации</th></tr>
+            </thead>
+            <tbody id="usersBody">
+                <tr><td colspan="5" class="empty-state">Загрузка...</td></tr>
+            </tbody>
+        </table>
+    </main>
+
+    <footer><p>© 2026 Студенческая проектная группа. Производственная практика.</p></footer>
+
+    <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+    <script src="js/api.js"></script>
+    <script src="js/auth.js"></script>
+    <script>
+        if (!Auth.requireAdmin()) throw new Error('admin required');
+
+        async function loadAdmin() {
+            const { data: stats } = await api.get('/admin/stats');
+            document.getElementById('statsGrid').innerHTML = `
+                <div class="stat-card"><div class="number">${stats.users}</div><div>Пользователи</div></div>
+                <div class="stat-card"><div class="number">${stats.regions}</div><div>Регионы</div></div>
+                <div class="stat-card"><div class="number">${stats.persons}</div><div>Персоналии</div></div>
+                <div class="stat-card"><div class="number">${stats.achievements}</div><div>Достижения</div></div>
+                <div class="stat-card"><div class="number">${stats.quiz_questions}</div><div>Вопросы</div></div>
+                <div class="stat-card"><div class="number">${stats.postcards}</div><div>Открытки</div></div>
+            `;
+
+            const { data: usersData } = await api.get('/admin/users');
+            const tbody = document.getElementById('usersBody');
+            tbody.innerHTML = usersData.items.map((u) => `
+                <tr>
+                    <td>${u.id}</td>
+                    <td>${u.name}</td>
+                    <td>${u.email}</td>
+                    <td>${u.role}</td>
+                    <td>${new Date(u.created_at).toLocaleDateString('ru-RU')}</td>
+                </tr>
+            `).join('');
+        }
+
+        loadAdmin().catch(() => {
+            document.getElementById('usersBody').innerHTML =
+                '<tr><td colspan="5" class="empty-state">Ошибка загрузки данных</td></tr>';
+        });
+    </script>
+</body>
+</html>
