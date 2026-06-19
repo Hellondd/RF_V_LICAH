@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>История праздника - День России</title>
+    <link rel="stylesheet" href="css/style.css">
+    <style>
+        .timeline { position: relative; max-width: 800px; margin: 0 auto; padding: 20px 0; }
+        .timeline::after { content: ''; position: absolute; width: 4px; background-color: var(--primary-blue); top: 0; bottom: 0; left: 50%; margin-left: -2px; }
+        .timeline-container { padding: 10px 40px; position: relative; background-color: inherit; width: 50%; }
+        .timeline-container::after { content: ''; position: absolute; width: 20px; height: 20px; right: -10px; background-color: var(--white); border: 4px solid var(--accent-red); top: 15px; border-radius: 50%; z-index: 1; }
+        .left { left: 0; }
+        .right { left: 50%; }
+        .right::after { left: -10px; }
+        .timeline-content { padding: 20px 30px; background-color: var(--white); position: relative; border-radius: var(--border-radius); box-shadow: var(--shadow); }
+        @media screen and (max-width: 600px) {
+            .timeline::after { left: 31px; }
+            .timeline-container { width: 100%; padding-left: 70px; padding-right: 25px; }
+            .timeline-container::after { left: 21px; }
+            .right { left: 0; }
+        }
+    </style>
+</head>
+<body>
+
+    <header>
+        <nav class="nav-container">
+            <a href="index.html" class="logo"><div class="logo-flag"></div>Россия в лицах</a>
+            <ul class="nav-menu">
+                <li><a href="index.html">Главная</a></li>
+                <li><a href="history.html" class="active">История праздника</a></li>
+                <li><a href="regions.html">Карта регионов</a></li>
+                <li><a href="persons.html">Россия в лицах</a></li>
+            </ul>
+        </nav>
+    </header>
+
+    <main>
+        <h1 style="text-align: center; margin-bottom: 40px;">Лента исторических событий</h1>
+
+        <div class="timeline">
+            <div class="timeline-container left">
+                <div class="timeline-content">
+                    <h3>12 июня 1990 года</h3>
+                    <p>Первый Съезд народных депутатов РСФСР принял Декларацию о государственном суверенитете. Документ заложил основу для новой правовой системы и государственного устройства.</p>
+                </div>
+            </div>
+            <div class="timeline-container right">
+                <div class="timeline-content">
+                    <h3>11 июня 1992 года</h3>
+                    <p>Вышло Постановление Верховного Совета РФ N 2981-I. Дата 12 июня официально объявлена праздничным нерабочим днем. Начало традиции ежегодного празднования.</p>
+                </div>
+            </div>
+            <div class="timeline-container left">
+                <div class="timeline-content">
+                    <h3>1998 год</h3>
+                    <p>Президент в телевизионном обращении предложил переименовать праздник в привычный нам "День России". Общество позитивно приняло новое название, сделав его главным символом лета.</p>
+                </div>
+            </div>
+            <div class="timeline-container right">
+                <div class="timeline-content">
+                    <h3>1 февраля 2002 года</h3>
+                    <p>Вступил в силу новый Трудовой кодекс РФ. В его тексте название "День России" было закреплено официально на законодательном уровне.</p>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <footer>
+        <p>© 2026 Студенческая проектная группа. Производственная практика.</p>
+    </footer>
+
+</body>
+</html>

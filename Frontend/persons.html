@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Россия в лицах - Выдающиеся деятели</title>
+    <link rel="stylesheet" href="css/style.css">
+    <style>
+        .filter-buttons { display: flex; gap: 10px; flex-wrap: wrap; margin-bottom: 30px; }
+        .filter-btn { padding: 8px 16px; border: 1px solid var(--primary-blue); background: white; color: var(--primary-blue); border-radius: 20px; cursor: pointer; font-weight: 500; }
+        .filter-btn.active { background: var(--primary-blue); color: white; }
+    </style>
+</head>
+<body>
+
+    <header>
+        <nav class="nav-container">
+            <a href="index.html" class="logo"><div class="logo-flag"></div>Россия в лицах</a>
+            <ul class="nav-menu">
+                <li><a href="index.html">Главная</a></li>
+                <li><a href="history.html">История праздника</a></li>
+                <li><a href="regions.html">Карта регионов</a></li>
+                <li><a href="persons.html" class="active">Россия в лицах</a></li>
+            </ul>
+        </nav>
+    </header>
+
+    <main>
+        <h1>Выдающиеся личности</h1>
+        <p style="color: var(--text-muted); margin-bottom: 25px;">Граждане страны, внесшие доказанный научный и практический вклад в развитие медицины, космонавтики и инженерии.</p>
+
+        <div class="filter-buttons">
+            <button class="filter-btn active" data-category="all">Все сферы</button>
+            <button class="filter-btn" data-category="science">Наука и Космос</button>
+            <button class="filter-btn" data-category="medicine">Медицина</button>
+            <button class="filter-btn" data-category="tech">Технологии</button>
+        </div>
+
+        <div class="grid" id="personsGrid">
+            <!-- 1 -->
+            <div class="card" data-cat="science">
+                <div class="card-content">
+                    <span class="card-tag">Наука</span>
+                    <h3>Дмитрий Менделеев</h3>
+                    <p style="color: var(--accent-red); font-size: 14px;"><strong>Вклад:</strong> Открытие периодического закона химических элементов в 1869 году.</p>
+                    <p style="margin-top: 10px; font-size: 14px;">Разработал таблицу, ставшую фундаментом для всей современной физики и химии. Спрогнозировал свойства еще не открытых на тот момент элементов.</p>
+                </div>
+            </div>
+            <!-- 2 -->
+            <div class="card" data-cat="science">
+                <div class="card-content">
+                    <span class="card-tag">Космос</span>
+                    <h3>Юрий Гагарин</h3>
+                    <p style="color: var(--accent-red); font-size: 14px;"><strong>Вклад:</strong> Первый в истории человечества полет на орбиту Земли.</p>
+                    <p style="margin-top: 10px; font-size: 14px;">12 апреля 1961 года совершил полет на корабле "Восток-1", проведя в космосе 108 минут и доказав возможность работы человека в невесомости.</p>
+                </div>
+            </div>
+            <!-- 3 -->
+            <div class="card" data-cat="medicine">
+                <div class="card-content">
+                    <span class="card-tag">Медицина</span>
+                    <h3>Николай Пирогов</h3>
+                    <p style="color: var(--accent-red); font-size: 14px;"><strong>Вклад:</strong> Создание военно-полевой хирургии и топографической анатомии.</p>
+                    <p style="margin-top: 10px; font-size: 14px;">Первым применил эфирный наркоз в полевых условиях во время военных действий (1847 год), спас тысячи жизней и внедрил гипсовую повязку.</p>
+                </div>
+            </div>
+            <!-- 4 -->
+            <div class="card" data-cat="tech">
+                <div class="card-content">
+                    <span class="card-tag">Технологии</span>
+                    <h3>Сергей Королев</h3>
+                    <p style="color: var(--accent-red); font-size: 14px;"><strong>Вклад:</strong> Конструирование первого искусственного спутника Земли.</p>
+                    <p style="margin-top: 10px; font-size: 14px;">Под его руководством в 1957 году был запущен первый спутник ПС-1, а также осуществлены запуски аппаратов к Луне, Венере и Марсу.</p>
+                </div>
+            </div>
+            <!-- 5 -->
+            <div class="card" data-cat="medicine">
+                <div class="card-content">
+                    <span class="card-tag">Медицина</span>
+                    <h3>Николай Склифосовский</h3>
+                    <p style="color: var(--accent-red); font-size: 14px;"><strong>Вклад:</strong> Внедрение антисептики и методов радикальной хирургии.</p>
+                    <p style="margin-top: 10px; font-size: 14px;">Революционизировал российскую хирургию, сделав обязательной стерилизацию инструментов, что свело послеоперационную смертность к минимуму.</p>
+                </div>
+            </div>
+            <!-- 6 -->
+            <div class="card" data-cat="science">
+                <div class="card-content">
+                    <span class="card-tag">Наука</span>
+                    <h3>Игорь Курчатов</h3>
+                    <p style="color: var(--accent-red); font-size: 14px;"><strong>Вклад:</strong> Развитие мирного атома и запуск первой в мире АЭС.</p>
+                    <p style="margin-top: 10px; font-size: 14px;">Под его руководством в Обнинске в 1954 году была введена в эксплуатацию первая атомная электростанция, давшая старт мирной ядерной энергетике.</p>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <footer>
+        <p>© 2026 Студенческая проектная группа. Производственная практика.</p>
+    </footer>
+
+    <script src="js/main.js"></script>
+</body>
+</html>

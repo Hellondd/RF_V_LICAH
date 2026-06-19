@@ -1,0 +1,153 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Карта регионов России</title>
+    <link rel="stylesheet" href="css/style.css">
+    <style>
+        .search-container { background: white; padding: 20px; border-radius: var(--border-radius); box-shadow: var(--shadow); margin-bottom: 30px; display: flex; gap: 15px; }
+        .search-container input, .search-container select { padding: 10px; border: 1px solid #ccc; border-radius: 6px; flex: 1; font-size: 16px; }
+    </style>
+</head>
+<body>
+
+    <header>
+        <nav class="nav-container">
+            <a href="index.html" class="logo"><div class="logo-flag"></div>Россия в лицах</a>
+            <ul class="nav-menu">
+                <li><a href="index.html">Главная</a></li>
+                <li><a href="history.html">История праздника</a></li>
+                <li><a href="regions.html" class="active">Карта регионов</a></li>
+                <li><a href="persons.html">Россия в лицах</a></li>
+            </ul>
+        </nav>
+    </header>
+
+    <main>
+        <h1>Регионы России</h1>
+        <p style="color: var(--text-muted); margin-bottom: 20px;">Информационные карточки субъектов РФ с географическими и промышленными показателями.</p>
+
+        <div class="search-container">
+            <input type="text" id="regionSearch" placeholder="Поиск по названию или городу...">
+            <select id="districtFilter">
+                <option value="">Все федеральные округа</option>
+                <option value="ЦФО">Центральный ФО</option>
+                <option value="СЗФО">Северо-Западный ФО</option>
+                <option value="ПФО">Приволжский ФО</option>
+                <option value="СФО">Сибирский ФО</option>
+                <option value="ДВФО">Дальневосточный ФО</option>
+            </select>
+        </div>
+
+        <div class="grid" id="regionsGrid">
+            <!-- 1 -->
+            <div class="card" data-district="ЦФО">
+                <div class="card-content">
+                    <span class="card-tag">Центральный ФО</span>
+                    <h3>Москва</h3>
+                    <p><strong>Административный центр:</strong> Москва</p>
+                    <p style="margin: 10px 0;">Крупнейший научно-образовательный и экономический центр России.</p>
+                    <small>📌 ФАКТ: Московский метрополитен включает более 250 станций и перевозит до 9 млн человек ежедневно.</small>
+                </div>
+            </div>
+            <!-- 2 -->
+            <div class="card" data-district="СЗФО">
+                <div class="card-content">
+                    <span class="card-tag">Северо-Западный ФО</span>
+                    <h3>Санкт-Петербург</h3>
+                    <p><strong>Административный центр:</strong> Санкт-Петербург</p>
+                    <p style="margin: 10px 0;">Город федерального значения, крупнейший морской порт на Балтийском море.</p>
+                    <small>📌 ФАКТ: Глубина заложения станции метро "Адмиралтейская" составляет 86 метров - одна из самых глубоких в мире.</small>
+                </div>
+            </div>
+            <!-- 3 -->
+            <div class="card" data-district="ПФО">
+                <div class="card-content">
+                    <span class="card-tag">Приволжский ФО</span>
+                    <h3>Республика Татарстан</h3>
+                    <p><strong>Административный центр:</strong> Казань</p>
+                    <p style="margin: 10px 0;">Один из лидеров по добыче нефти и производству грузовых автомобилей в РФ.</p>
+                    <small>📌 ФАКТ: На территории региона расположен Иннополис - самый молодой ИТ-город России.</small>
+                </div>
+            </div>
+            <!-- 4 -->
+            <div class="card" data-district="ПФО">
+                <div class="card-content">
+                    <span class="card-tag">Нижегородская область</span>
+                    <h3>Нижегородская область</h3>
+                    <p><strong>Административный центр:</strong> Нижний Новгород</p>
+                    <p style="margin: 10px 0;">Индустриальный центр, развито машиностроение, металлообработка и ИТ-индустрия.</p>
+                    <small>📌 ФАКТ: Местный Кремль ни разу не был взят вражескими войсками за всю историю.</small>
+                </div>
+            </div>
+            <!-- 5 -->
+            <div class="card" data-district="СФО">
+                <div class="card-content">
+                    <span class="card-tag">Сибирский ФО</span>
+                    <h3>Новосибирская область</h3>
+                    <p><strong>Административный центр:</strong> Новосибирск</p>
+                    <p style="margin: 10px 0;">Научно-производственный хаб Сибири, узел Транссибирской магистрали.</p>
+                    <small>📌 ФАКТ: Новосибирский Академгородок - один из важнейших научных центров РАН.</small>
+                </div>
+            </div>
+            <!-- 6 -->
+            <div class="card" data-district="ДВФО">
+                <div class="card-content">
+                    <span class="card-tag">Приморский край</span>
+                    <h3>Приморский край</h3>
+                    <p><strong>Административный центр:</strong> Владивосток</p>
+                    <p style="margin: 10px 0;">Главные морские ворота России на Дальнем Востоке, база Тихоокеанского флота.</p>
+                    <small>📌 ФАКТ: Русский мост во Владивостоке имеет самый длинный в мире вантовый пролет - 1104 метра.</small>
+                </div>
+            </div>
+            <!-- 7 -->
+            <div class="card" data-district="СФО">
+                <div class="card-content">
+                    <span class="card-tag">Иркутская область</span>
+                    <h3>Иркутская область</h3>
+                    <p><strong>Административный центр:</strong> Иркутск</p>
+                    <p style="margin: 10px 0;">Лидер Сибири по выработке гидроэлектроэнергии и заготовке леса.</p>
+                    <small>📌 ФАКТ: В регионе расположено озеро Байкал, содержащее 20% мировых запасов озерной пресной воды.</small>
+                </div>
+            </div>
+            <!-- 8 -->
+            <div class="card" data-district="ЦФО">
+                <div class="card-content">
+                    <span class="card-tag">Центральный ФО</span>
+                    <h3>Ярославская область</h3>
+                    <p><strong>Административный центр:</strong> Ярославль</p>
+                    <p style="margin: 10px 0;">Исторический регион, ядро туристического маршрута "Золотое кольцо России".</p>
+                    <small>📌 ФАКТ: В Ярославле в 1750 году был основан первый в России профессиональный общедоступный театр.</small>
+                </div>
+            </div>
+            <!-- 9 -->
+            <div class="card" data-district="СЗФО">
+                <div class="card-content">
+                    <span class="card-tag">Северо-Западный ФО</span>
+                    <h3>Мурманская область</h3>
+                    <p><strong>Административный центр:</strong> Мурманск</p>
+                    <p style="margin: 10px 0;">Расположена за Полярным кругом. База единственного в мире атомного ледокольного флота.</p>
+                    <small>📌 ФАКТ: Порт Мурманска является незамерзающим благодаря теплому течению Гольфстрим.</small>
+                </div>
+            </div>
+            <!-- 10 -->
+            <div class="card" data-district="ПФО">
+                <div class="card-content">
+                    <span class="card-tag">Самарская область</span>
+                    <h3>Самарская область</h3>
+                    <p><strong>Административный центр:</strong> Самара</p>
+                    <p style="margin: 10px 0;">Центр отечественного космического машиностроения и автомобилестроения.</p>
+                    <small>📌 ФАКТ: Именно на самарском заводе "Прогресс" была изготовлена ракета-носитель для корабля Юрия Гагарина.</small>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <footer>
+        <p>© 2026 Студенческая проектная группа. Производственная практика.</p>
+    </footer>
+
+    <script src="js/main.js"></script>
+</body>
+</html>
