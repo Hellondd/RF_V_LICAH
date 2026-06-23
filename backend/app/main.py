@@ -7,6 +7,7 @@ from app.database import engine, Base
 from app.core.logging import setup_logging
 import app.models  # noqa: F401
 
+
 # Создаём таблицы (если их нет) — но мы уже отключили, оставим на всякий случай
 # Base.metadata.create_all(bind=engine)
 
@@ -27,7 +28,10 @@ app.add_middleware(
 app.include_router(api_router)
 
 # Монтируем папку frontend как статику
-app.mount("/", StaticFiles(directory="frontend", html=True), name="frontend")
+app.mount("/", StaticFiles(directory="/frontend", html=True), name="frontend")
+
+app.mount("/uploads", StaticFiles(directory="uploads"), name="uploads")
+app.mount("/images", StaticFiles(directory="static/images"), name="images")
 
 # Дополнительный корневой эндпоинт на случай, если статика не сработает
 @app.get("/")

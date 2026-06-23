@@ -3,11 +3,320 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Карта регионов России</title>
+    <title>Регионы России</title>
     <link rel="stylesheet" href="css/style.css">
+    <!-- Leaflet CSS -->
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
     <style>
-        .search-container { background: white; padding: 20px; border-radius: var(--border-radius); box-shadow: var(--shadow); margin-bottom: 30px; display: flex; gap: 15px; }
-        .search-container input, .search-container select { padding: 10px; border: 1px solid #ccc; border-radius: 6px; flex: 1; font-size: 16px; }
+        .search-container {
+            background: white;
+            padding: 20px;
+            border-radius: var(--border-radius);
+            box-shadow: var(--shadow);
+            margin-bottom: 30px;
+            display: flex;
+            gap: 15px;
+            flex-wrap: wrap;
+        }
+        .search-container input,
+        .search-container select {
+            padding: 10px 15px;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            flex: 1;
+            font-size: 15px;
+            min-width: 180px;
+        }
+        .search-container input:focus,
+        .search-container select:focus {
+            border-color: var(--primary-color, #2c3e50);
+            outline: none;
+        }
+        .search-container button {
+            padding: 10px 25px;
+            background: var(--primary-color, #2c3e50);
+            color: white;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 15px;
+            transition: background 0.3s;
+        }
+        .search-container button:hover {
+            background: #1a252f;
+        }
+
+        .map-container {
+            background: white;
+            border-radius: var(--border-radius);
+            box-shadow: var(--shadow);
+            margin-bottom: 30px;
+            padding: 15px;
+            position: relative;
+        }
+        #map {
+            width: 100%;
+            height: 550px;
+            border-radius: 10px;
+            background: #f0f4f8;
+        }
+
+        .regions-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+            gap: 24px;
+            margin-top: 20px;
+        }
+        .region-card {
+            background: white;
+            border-radius: var(--border-radius);
+            box-shadow: var(--shadow);
+            overflow: hidden;
+            cursor: pointer;
+            transition: transform 0.25s ease, box-shadow 0.25s ease, border-color 0.3s;
+            border: 3px solid transparent;
+        }
+        .region-card:hover {
+            transform: translateY(-6px);
+            box-shadow: 0 10px 30px rgba(0,0,0,0.15);
+        }
+        .region-card.active {
+            border-color: #FF6B35;
+            background: #fff8f5;
+        }
+        .region-card .card-image {
+            width: 100%;
+            height: 160px;
+            object-fit: cover;
+            background: #eef2f7;
+        }
+        .region-card .card-body {
+            padding: 18px 20px 20px;
+        }
+        .region-card .card-tag {
+            background: #eef2f7;
+            padding: 3px 14px;
+            border-radius: 20px;
+            font-size: 12px;
+            font-weight: 600;
+            color: #2c3e50;
+            display: inline-block;
+            margin-bottom: 10px;
+            letter-spacing: 0.3px;
+        }
+        .region-card h3 {
+            margin: 0 0 6px 0;
+            font-size: 18px;
+            color: var(--text-primary, #1a1a2e);
+        }
+        .region-card .card-capital {
+            font-size: 14px;
+            color: #666;
+            margin-bottom: 8px;
+        }
+        .region-card .card-capital strong {
+            color: #333;
+        }
+        .region-card .card-desc {
+            font-size: 14px;
+            color: #555;
+            line-height: 1.5;
+            margin: 8px 0 10px;
+            display: -webkit-box;
+            -webkit-line-clamp: 2;
+            -webkit-box-orient: vertical;
+            overflow: hidden;
+        }
+        .region-card .card-fact {
+            font-size: 13px;
+            color: #777;
+            padding-top: 10px;
+            border-top: 1px solid #f0f0f0;
+            display: block;
+        }
+        .region-card .card-fact::before {
+            content: "📌 ";
+        }
+
+        /* Попап */
+        .region-popup-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,0.55);
+            display: none;
+            justify-content: center;
+            align-items: center;
+            z-index: 9999;
+            backdrop-filter: blur(3px);
+        }
+        .region-popup-overlay.active {
+            display: flex;
+        }
+        .region-popup {
+            background: white;
+            border-radius: 18px;
+            max-width: 620px;
+            width: 92%;
+            max-height: 85vh;
+            overflow-y: auto;
+            padding: 30px 32px;
+            position: relative;
+            animation: slideUp 0.3s ease;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+        }
+        @keyframes slideUp {
+            from { transform: translateY(30px); opacity: 0; }
+            to { transform: translateY(0); opacity: 1; }
+        }
+        .region-popup .close-btn {
+            position: absolute;
+            top: 14px;
+            right: 20px;
+            font-size: 30px;
+            cursor: pointer;
+            color: #999;
+            background: none;
+            border: none;
+            line-height: 1;
+            transition: color 0.2s;
+        }
+        .region-popup .close-btn:hover {
+            color: #333;
+        }
+        .region-popup img {
+            width: 100%;
+            height: 210px;
+            object-fit: cover;
+            border-radius: 12px;
+            margin-bottom: 16px;
+            background: #eef2f7;
+        }
+        .region-popup h2 {
+            margin: 0 0 4px 0;
+            font-size: 24px;
+            color: #1a1a2e;
+        }
+        .region-popup .popup-district {
+            color: #777;
+            font-size: 14px;
+            font-weight: 500;
+            margin-bottom: 12px;
+        }
+        .region-popup .popup-desc {
+            color: #444;
+            line-height: 1.7;
+            font-size: 15px;
+        }
+        .region-popup .popup-facts {
+            background: #f8f9fc;
+            padding: 16px 18px;
+            border-radius: 10px;
+            margin: 12px 0;
+            border-left: 4px solid #FF6B35;
+        }
+        .region-popup .popup-facts strong {
+            display: block;
+            margin-bottom: 4px;
+            color: #1a1a2e;
+        }
+        .region-popup .popup-facts ul {
+            margin: 4px 0 0 0;
+            padding-left: 20px;
+            color: #555;
+        }
+        .region-popup .popup-facts li {
+            margin-bottom: 3px;
+        }
+        .region-popup .popup-meta {
+            margin-top: 12px;
+            padding-top: 12px;
+            border-top: 1px solid #eee;
+            color: #555;
+            font-size: 14px;
+        }
+        .region-popup .popup-meta strong {
+            color: #333;
+        }
+        .region-popup .popup-link {
+            display: inline-block;
+            margin-top: 16px;
+            padding: 10px 26px;
+            background: var(--primary-color, #2c3e50);
+            color: white;
+            text-decoration: none;
+            border-radius: 8px;
+            font-weight: 500;
+            transition: background 0.3s;
+        }
+        .region-popup .popup-link:hover {
+            background: #1a252f;
+        }
+
+        .region-tooltip {
+            font-size: 14px;
+            font-weight: 600;
+            padding: 6px 14px;
+            background: rgba(0,0,0,0.8);
+            color: white;
+            border-radius: 6px;
+            border: none;
+        }
+
+        @media (max-width: 768px) {
+            .search-container {
+                flex-direction: column;
+            }
+            .search-container input,
+            .search-container select {
+                flex: none;
+                width: 100%;
+            }
+            #map {
+                height: 320px;
+            }
+            .regions-grid {
+                grid-template-columns: 1fr 1fr;
+                gap: 16px;
+            }
+            .region-popup {
+                padding: 20px 18px;
+                max-height: 90vh;
+            }
+            .region-popup img {
+                height: 150px;
+            }
+        }
+        @media (max-width: 480px) {
+            .regions-grid {
+                grid-template-columns: 1fr;
+            }
+            #map {
+                height: 260px;
+            }
+        }
+
+        .region-popup::-webkit-scrollbar {
+            width: 6px;
+        }
+        .region-popup::-webkit-scrollbar-thumb {
+            background: #ccc;
+            border-radius: 10px;
+        }
+        .region-popup::-webkit-scrollbar-track {
+            background: #f5f5f5;
+            border-radius: 10px;
+        }
+
+        .loader {
+            text-align: center;
+            grid-column: 1 / -1;
+            padding: 50px 20px;
+            color: #999;
+            font-size: 16px;
+        }
     </style>
 </head>
 <body>
@@ -30,112 +339,35 @@
 
     <main>
         <h1>Регионы России</h1>
-        <p style="color: var(--text-muted); margin-bottom: 20px;">Информационные карточки субъектов РФ с географическими и промышленными показателями.</p>
+        <p style="color: var(--text-muted, #666); margin-bottom: 20px;">
+            Интерактивная карта и карточки всех субъектов РФ.
+            Нажмите на <strong>регион на карте</strong> или <strong>карточку</strong> для подробной информации.
+        </p>
 
         <div class="search-container">
-            <input type="text" id="regionSearch" placeholder="Поиск по названию или городу...">
+            <input type="text" id="regionSearch" placeholder="🔍 Поиск по названию или столице...">
             <select id="districtFilter">
                 <option value="">Все федеральные округа</option>
-                <option value="ЦФО">Центральный ФО</option>
-                <option value="СЗФО">Северо-Западный ФО</option>
-                <option value="ПФО">Приволжский ФО</option>
-                <option value="СФО">Сибирский ФО</option>
-                <option value="ДВФО">Дальневосточный ФО</option>
+                <option value="Центральный федеральный округ">Центральный ФО</option>
+                <option value="Северо-Западный федеральный округ">Северо-Западный ФО</option>
+                <option value="Южный федеральный округ">Южный ФО</option>
+                <option value="Северо-Кавказский федеральный округ">Северо-Кавказский ФО</option>
+                <option value="Приволжский федеральный округ">Приволжский ФО</option>
+                <option value="Уральский федеральный округ">Уральский ФО</option>
+                <option value="Сибирский федеральный округ">Сибирский ФО</option>
+                <option value="Дальневосточный федеральный округ">Дальневосточный ФО</option>
             </select>
+            <button onclick="resetFilters()">Сбросить</button>
         </div>
 
-        <div class="grid" id="regionsGrid">
-            <!-- 10 карточек (каждая ссылается на region.html?id=) -->
-            <div class="card" data-district="ЦФО" onclick="location.href='region.html?id=1'">
-                <div class="card-content">
-                    <span class="card-tag">Центральный ФО</span>
-                    <h3>Москва</h3>
-                    <p><strong>Административный центр:</strong> Москва</p>
-                    <p style="margin: 10px 0;">Крупнейший научно-образовательный и экономический центр России.</p>
-                    <small>📌 ФАКТ: Московский метрополитен включает более 250 станций и перевозит до 9 млн человек ежедневно.</small>
-                </div>
-            </div>
-            <div class="card" data-district="СЗФО" onclick="location.href='region.html?id=2'">
-                <div class="card-content">
-                    <span class="card-tag">Северо-Западный ФО</span>
-                    <h3>Санкт-Петербург</h3>
-                    <p><strong>Административный центр:</strong> Санкт-Петербург</p>
-                    <p style="margin: 10px 0;">Город федерального значения, крупнейший морской порт на Балтийском море.</p>
-                    <small>📌 ФАКТ: Глубина заложения станции метро "Адмиралтейская" составляет 86 метров - одна из самых глубоких в мире.</small>
-                </div>
-            </div>
-            <div class="card" data-district="ПФО" onclick="location.href='region.html?id=3'">
-                <div class="card-content">
-                    <span class="card-tag">Приволжский ФО</span>
-                    <h3>Республика Татарстан</h3>
-                    <p><strong>Административный центр:</strong> Казань</p>
-                    <p style="margin: 10px 0;">Один из лидеров по добыче нефти и производству грузовых автомобилей в РФ.</p>
-                    <small>📌 ФАКТ: На территории региона расположен Иннополис - самый молодой ИТ-город России.</small>
-                </div>
-            </div>
-            <div class="card" data-district="ПФО" onclick="location.href='region.html?id=4'">
-                <div class="card-content">
-                    <span class="card-tag">Нижегородская область</span>
-                    <h3>Нижегородская область</h3>
-                    <p><strong>Административный центр:</strong> Нижний Новгород</p>
-                    <p style="margin: 10px 0;">Индустриальный центр, развито машиностроение, металлообработка и ИТ-индустрия.</p>
-                    <small>📌 ФАКТ: Местный Кремль ни разу не был взят вражескими войсками за всю историю.</small>
-                </div>
-            </div>
-            <div class="card" data-district="СФО" onclick="location.href='region.html?id=5'">
-                <div class="card-content">
-                    <span class="card-tag">Сибирский ФО</span>
-                    <h3>Новосибирская область</h3>
-                    <p><strong>Административный центр:</strong> Новосибирск</p>
-                    <p style="margin: 10px 0;">Научно-производственный хаб Сибири, узел Транссибирской магистрали.</p>
-                    <small>📌 ФАКТ: Новосибирский Академгородок - один из важнейших научных центров РАН.</small>
-                </div>
-            </div>
-            <div class="card" data-district="ДВФО" onclick="location.href='region.html?id=6'">
-                <div class="card-content">
-                    <span class="card-tag">Приморский край</span>
-                    <h3>Приморский край</h3>
-                    <p><strong>Административный центр:</strong> Владивосток</p>
-                    <p style="margin: 10px 0;">Главные морские ворота России на Дальнем Востоке, база Тихоокеанского флота.</p>
-                    <small>📌 ФАКТ: Русский мост во Владивостоке имеет самый длинный в мире вантовый пролет - 1104 метра.</small>
-                </div>
-            </div>
-            <div class="card" data-district="СФО" onclick="location.href='region.html?id=7'">
-                <div class="card-content">
-                    <span class="card-tag">Иркутская область</span>
-                    <h3>Иркутская область</h3>
-                    <p><strong>Административный центр:</strong> Иркутск</p>
-                    <p style="margin: 10px 0;">Лидер Сибири по выработке гидроэлектроэнергии и заготовке леса.</p>
-                    <small>📌 ФАКТ: В регионе расположено озеро Байкал, содержащее 20% мировых запасов озерной пресной воды.</small>
-                </div>
-            </div>
-            <div class="card" data-district="ЦФО" onclick="location.href='region.html?id=8'">
-                <div class="card-content">
-                    <span class="card-tag">Центральный ФО</span>
-                    <h3>Ярославская область</h3>
-                    <p><strong>Административный центр:</strong> Ярославль</p>
-                    <p style="margin: 10px 0;">Исторический регион, ядро туристического маршрута "Золотое кольцо России".</p>
-                    <small>📌 ФАКТ: В Ярославле в 1750 году был основан первый в России профессиональный общедоступный театр.</small>
-                </div>
-            </div>
-            <div class="card" data-district="СЗФО" onclick="location.href='region.html?id=9'">
-                <div class="card-content">
-                    <span class="card-tag">Северо-Западный ФО</span>
-                    <h3>Мурманская область</h3>
-                    <p><strong>Административный центр:</strong> Мурманск</p>
-                    <p style="margin: 10px 0;">Расположена за Полярным кругом. База единственного в мире атомного ледокольного флота.</p>
-                    <small>📌 ФАКТ: Порт Мурманска является незамерзающим благодаря теплому течению Гольфстрим.</small>
-                </div>
-            </div>
-            <div class="card" data-district="ПФО" onclick="location.href='region.html?id=10'">
-                <div class="card-content">
-                    <span class="card-tag">Самарская область</span>
-                    <h3>Самарская область</h3>
-                    <p><strong>Административный центр:</strong> Самара</p>
-                    <p style="margin: 10px 0;">Центр отечественного космического машиностроения и автомобилестроения.</p>
-                    <small>📌 ФАКТ: Именно на самарском заводе "Прогресс" была изготовлена ракета-носитель для корабля Юрия Гагарина.</small>
-                </div>
-            </div>
+        <div class="map-container">
+            <div id="map"></div>
+        </div>
+
+        <h2 style="margin-bottom: 6px;">Список регионов</h2>
+        <p style="color: var(--text-muted, #666); font-size: 14px; margin-bottom: 16px;" id="regionsCount">Загрузка...</p>
+        <div class="regions-grid" id="regionsGrid">
+            <div class="loader">Загрузка регионов...</div>
         </div>
     </main>
 
@@ -143,10 +375,480 @@
         <p>© 2026 Студенческая проектная группа. Производственная практика.</p>
     </footer>
 
-    <script src="js/main.js"></script>
+    <!-- Попап -->
+    <div class="region-popup-overlay" id="regionPopup">
+        <div class="region-popup">
+            <button class="close-btn" onclick="closePopup()">&times;</button>
+            <img id="popupImage" src="" alt="Регион">
+            <h2 id="popupTitle">Заголовок</h2>
+            <div class="popup-district" id="popupDistrict">Округ</div>
+            <div class="popup-desc" id="popupDescription">Описание</div>
+            <div class="popup-facts" id="popupFactsBlock">
+                <strong>📌 Интересные факты</strong>
+                <ul id="popupFactsList"></ul>
+            </div>
+            <div class="popup-meta" id="popupMeta"></div>
+            <a href="#" class="popup-link" id="popupLink">Подробнее о регионе →</a>
+        </div>
+    </div>
+
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+    <script src="js/main.js"></script>
     <script src="js/api.js"></script>
     <script src="js/auth.js"></script>
-    <script>Auth.updateNav();</script>
+    <script>
+        Auth.updateNav();
+
+        // ============================================================
+        // ГЛОБАЛЬНЫЕ ПЕРЕМЕННЫЕ
+        // ============================================================
+        let map = null;
+        let geoJsonLayer = null;
+        let allRegions = [];
+        let selectedRegionId = null;
+
+        // ============================================================
+        // ФУНКЦИЯ ДЛЯ ПРАВИЛЬНОГО ПУТИ К ИЗОБРАЖЕНИЯМ
+        // ============================================================
+        function getImageUrl(imagePath) {
+            if (!imagePath) return '/images/default-region.jpg';
+            
+            // Если путь уже начинается с /images/ - оставляем как есть
+            if (imagePath.startsWith('/images/')) {
+                return imagePath;
+            }
+            
+            // Если путь начинается с /uploads/ - меняем на /images/
+            if (imagePath.startsWith('/uploads/')) {
+                return imagePath.replace('/uploads/', '/images/');
+            }
+            
+            // Если путь начинается с images/ (без слеша)
+            if (imagePath.startsWith('images/')) {
+                return '/' + imagePath;
+            }
+            
+            // Если путь начинается с /static/ или других
+            if (imagePath.startsWith('/static/')) {
+                return imagePath;
+            }
+            
+            // Если просто имя файла (например, "ea.jpg")
+            if (!imagePath.includes('/')) {
+                return '/images/' + imagePath;
+            }
+            
+            // В остальных случаях возвращаем как есть, но с / в начале
+            return imagePath.startsWith('/') ? imagePath : '/' + imagePath;
+        }
+
+        // ============================================================
+        // ИНИЦИАЛИЗАЦИЯ КАРТЫ
+        // ============================================================
+        function initMap() {
+            map = L.map('map', {
+                center: [62.0, 100.0],
+                zoom: 3,
+                zoomControl: true,
+                scrollWheelZoom: true,
+                attributionControl: false
+            });
+
+            // Добавляем тайлы с кастомной атрибуцией
+            L.tileLayer('https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png', {
+                attribution: '',
+                maxZoom: 19,
+                subdomains: 'abcd'
+            }).addTo(map);
+
+            // Создаем кастомную атрибуцию
+            var customAttribution = L.control({ position: 'bottomright' });
+            
+            customAttribution.onAdd = function() {
+                var div = L.DomUtil.create('div', 'custom-attribution');
+                div.style.cssText = `
+                    background: rgba(255, 255, 255, 0.92);
+                    padding: 6px 14px;
+                    border-radius: 6px;
+                    font-size: 11px;
+                    box-shadow: 0 1px 5px rgba(0,0,0,0.15);
+                    color: #333;
+                    font-family: Arial, sans-serif;
+                    display: flex;
+                    align-items: center;
+                    gap: 8px;
+                `;
+                div.innerHTML = `
+                    <span style="color: #999;">|</span>
+                    <a href="https://www.openstreetmap.org/copyright" target="_blank" 
+                       style="color: #0078A8; text-decoration: none;">
+                        © OpenStreetMap
+                    </a>
+                    <span style="color: #ccc;">|</span>
+                    <span style="color: #666;">Россия в лицах</span>
+                `;
+                return div;
+            };
+            
+            customAttribution.addTo(map);
+
+            // Ограничиваем карту только Россией
+            map.setMaxBounds([
+                [40, 20],
+                [85, 190]
+            ]);
+        }
+
+        // ============================================================
+        // ЗАГРУЗКА GEOJSON
+        // ============================================================
+        function loadGeoJSON() {
+            axios.get('/api/v1/regions/geojson')
+                .then(response => {
+                    const data = response.data;
+                    console.log('GeoJSON загружен:', data);
+
+                    if (geoJsonLayer) {
+                        map.removeLayer(geoJsonLayer);
+                    }
+
+                    geoJsonLayer = L.geoJSON(data, {
+                        style: function(feature) {
+                            const isSelected = feature.properties?.db_id === selectedRegionId;
+                            return {
+                                fillColor: isSelected ? '#FF6B35' : '#4A6FA5',
+                                weight: 2,
+                                opacity: 0.9,
+                                color: '#ffffff',
+                                fillOpacity: isSelected ? 0.8 : 0.5
+                            };
+                        },
+                        onEachFeature: function(feature, layer) {
+                            const props = feature.properties || {};
+                            const name = props.region_name || props.name || props.NAME || props.name_ru || 'Неизвестный регион';
+
+                            // Подсказка при наведении
+                            layer.bindTooltip(name, {
+                                sticky: true,
+                                className: 'region-tooltip',
+                                direction: 'center'
+                            });
+
+                            // Клик по региону
+                            layer.on('click', function() {
+                                const regionId = props.db_id;
+                                if (regionId) {
+                                    selectRegion(regionId);
+                                    showRegionPopup(regionId);
+                                } else {
+                                    // Ищем по названию
+                                    const matched = allRegions.find(r =>
+                                        r.title === name ||
+                                        r.title.includes(name) ||
+                                        name.includes(r.title)
+                                    );
+                                    if (matched) {
+                                        selectRegion(matched.id);
+                                        showRegionPopup(matched.id);
+                                    } else {
+                                        alert(`Регион "${name}" не найден в базе данных.`);
+                                    }
+                                }
+                            });
+
+                            // Подсветка при наведении
+                            layer.on('mouseover', function() {
+                                const isSelected = props.db_id === selectedRegionId;
+                                if (!isSelected) {
+                                    layer.setStyle({
+                                        fillOpacity: 0.7,
+                                        weight: 3,
+                                        color: '#FF6B35'
+                                    });
+                                }
+                            });
+
+                            layer.on('mouseout', function() {
+                                const isSelected = props.db_id === selectedRegionId;
+                                layer.setStyle({
+                                    fillOpacity: isSelected ? 0.8 : 0.5,
+                                    weight: 2,
+                                    color: '#ffffff'
+                                });
+                            });
+                        }
+                    }).addTo(map);
+
+                    // Автоматически подгоняем карту под Россию
+                    try {
+                        map.fitBounds(geoJsonLayer.getBounds(), {
+                            padding: [30, 30]
+                        });
+                    } catch (e) {
+                        console.warn('Не удалось подогнать карту:', e);
+                    }
+
+                    // Загружаем карточки
+                    loadRegionsCards();
+                })
+                .catch(error => {
+                    console.error('Ошибка загрузки GeoJSON:', error);
+                    // Всё равно загружаем карточки
+                    loadRegionsCards();
+                    document.querySelector('#map').innerHTML = `
+                        <div style="text-align:center;padding:40px;color:#999;">
+                            ⚠️ Карта временно недоступна<br>
+                            <small>Используйте карточки для просмотра регионов</small>
+                        </div>
+                    `;
+                });
+        }
+
+        // ============================================================
+        // ЗАГРУЗКА КАРТОЧЕК
+        // ============================================================
+        function loadRegionsCards() {
+            axios.get('/api/v1/regions?limit=100')
+                .then(response => {
+                    allRegions = response.data;
+                    renderCards(allRegions);
+                    document.getElementById('regionsCount').textContent =
+                        `Всего регионов: ${allRegions.length}`;
+                })
+                .catch(error => {
+                    console.error('Ошибка загрузки регионов:', error);
+                    document.querySelector('#regionsGrid').innerHTML = `
+                        <div style="text-align: center; grid-column: 1/-1; padding: 40px; color: #e74c3c;">
+                            ❌ Ошибка загрузки регионов
+                        </div>
+                    `;
+                });
+        }
+
+        // ============================================================
+        // ОТРИСОВКА КАРТОЧЕК
+        // ============================================================
+        function renderCards(regions) {
+            const grid = document.getElementById('regionsGrid');
+
+            if (!regions || regions.length === 0) {
+                grid.innerHTML = `<div style="text-align: center; grid-column: 1/-1; padding: 40px; color: #999;">Нет регионов</div>`;
+                return;
+            }
+
+            let html = '';
+            regions.forEach(region => {
+                const isActive = region.id === selectedRegionId;
+                const image = getImageUrl(region.image_url);
+
+                let factText = '';
+                if (region.facts) {
+                    if (Array.isArray(region.facts) && region.facts.length > 0) {
+                        factText = region.facts[0];
+                    } else if (typeof region.facts === 'string') {
+                        factText = region.facts;
+                    }
+                }
+
+                html += `
+                    <div class="region-card ${isActive ? 'active' : ''}"
+                         data-id="${region.id}"
+                         data-district="${region.federal_district || ''}"
+                         data-title="${region.title}"
+                         data-capital="${region.capital || ''}"
+                         onclick="selectRegion(${region.id})">
+                        <img src="${image}" alt="${region.title}" class="card-image"
+                             onerror="this.src='/images/default-region.jpg'">
+                        <div class="card-body">
+                            <span class="card-tag">${region.federal_district || 'ФО'}</span>
+                            <h3>${region.title}</h3>
+                            <div class="card-capital"><strong>Столица:</strong> ${region.capital || 'Не указана'}</div>
+                            <div class="card-desc">${region.short_description || ''}</div>
+                            ${factText ? `<span class="card-fact">${factText}</span>` : ''}
+                        </div>
+                    </div>
+                `;
+            });
+
+            grid.innerHTML = html;
+        }
+
+        // ============================================================
+        // ВЫБОР РЕГИОНА
+        // ============================================================
+        function selectRegion(regionId) {
+            selectedRegionId = regionId;
+
+            if (geoJsonLayer) {
+                geoJsonLayer.eachLayer(function(layer) {
+                    const props = layer.feature?.properties || {};
+                    const isSelected = props.db_id === regionId;
+                    layer.setStyle({
+                        fillColor: isSelected ? '#FF6B35' : '#4A6FA5',
+                        fillOpacity: isSelected ? 0.8 : 0.5
+                    });
+                    if (isSelected) {
+                        try {
+                            map.fitBounds(layer.getBounds(), {
+                                padding: [50, 50],
+                                maxZoom: 7
+                            });
+                        } catch (e) {}
+                    }
+                });
+            }
+
+            const cards = document.querySelectorAll('.region-card');
+            cards.forEach(card => {
+                const id = parseInt(card.dataset.id);
+                card.classList.toggle('active', id === regionId);
+            });
+
+            if (window.innerWidth < 768) {
+                document.querySelector('.map-container').scrollIntoView({
+                    behavior: 'smooth',
+                    block: 'start'
+                });
+            }
+        }
+
+        // ============================================================
+        // ПОКАЗ ПОПАПА
+        // ============================================================
+        function showRegionPopup(regionId) {
+            let region = allRegions.find(r => r.id === regionId);
+
+            if (region) {
+                renderPopup(region);
+                return;
+            }
+
+            axios.get(`/api/v1/regions/${regionId}/info`)
+                .then(response => {
+                    renderPopup(response.data);
+                })
+                .catch(error => {
+                    console.error('Ошибка загрузки информации:', error);
+                    alert('Не удалось загрузить информацию о регионе');
+                });
+        }
+
+        function renderPopup(data) {
+            const imageUrl = getImageUrl(data.image_url);
+            
+            document.getElementById('popupImage').src = imageUrl;
+            document.getElementById('popupImage').onerror = function() {
+                this.src = '/images/default-region.jpg';
+            };
+            document.getElementById('popupTitle').textContent = data.title;
+            document.getElementById('popupDistrict').textContent = data.federal_district || 'Федеральный округ';
+            document.getElementById('popupDescription').textContent =
+                data.full_description || data.short_description || 'Описание отсутствует';
+
+            const factsList = document.getElementById('popupFactsList');
+            factsList.innerHTML = '';
+
+            let factsArray = [];
+            if (data.facts) {
+                if (Array.isArray(data.facts)) {
+                    factsArray = data.facts;
+                } else if (typeof data.facts === 'string') {
+                    factsArray = data.facts.split('\n').filter(f => f.trim());
+                } else if (typeof data.facts === 'object') {
+                    factsArray = Object.values(data.facts);
+                }
+            }
+
+            if (factsArray.length > 0) {
+                factsArray.forEach(fact => {
+                    const li = document.createElement('li');
+                    li.textContent = fact;
+                    factsList.appendChild(li);
+                });
+                document.getElementById('popupFactsBlock').style.display = 'block';
+            } else {
+                document.getElementById('popupFactsBlock').style.display = 'none';
+            }
+
+            let metaHtml = '';
+            if (data.culture) {
+                metaHtml += `<div><strong>🎭 Культура:</strong> ${data.culture}</div>`;
+            }
+            if (data.achievements) {
+                metaHtml += `<div><strong>🏆 Достижения:</strong> ${data.achievements}</div>`;
+            }
+            document.getElementById('popupMeta').innerHTML = metaHtml;
+
+            document.getElementById('popupLink').href = `region.html?id=${data.id}`;
+
+            document.getElementById('regionPopup').classList.add('active');
+            document.body.style.overflow = 'hidden';
+        }
+
+        // ============================================================
+        // ЗАКРЫТИЕ ПОПАПА
+        // ============================================================
+        function closePopup() {
+            document.getElementById('regionPopup').classList.remove('active');
+            document.body.style.overflow = '';
+        }
+
+        // ============================================================
+        // ФИЛЬТРЫ
+        // ============================================================
+        function filterRegions() {
+            const searchText = document.getElementById('regionSearch').value.toLowerCase().trim();
+            const districtFilter = document.getElementById('districtFilter').value;
+
+            const cards = document.querySelectorAll('.region-card');
+            let visibleCount = 0;
+
+            cards.forEach(card => {
+                const title = (card.dataset.title || '').toLowerCase();
+                const capital = (card.dataset.capital || '').toLowerCase();
+                const district = card.dataset.district || '';
+
+                const matchSearch = !searchText ||
+                    title.includes(searchText) ||
+                    capital.includes(searchText);
+                const matchDistrict = !districtFilter || district === districtFilter;
+
+                if (matchSearch && matchDistrict) {
+                    card.style.display = 'block';
+                    visibleCount++;
+                } else {
+                    card.style.display = 'none';
+                }
+            });
+
+            document.getElementById('regionsCount').textContent =
+                `Показано: ${visibleCount} из ${allRegions.length} регионов`;
+        }
+
+        function resetFilters() {
+            document.getElementById('regionSearch').value = '';
+            document.getElementById('districtFilter').value = '';
+            filterRegions();
+        }
+
+        // ============================================================
+        // ЗАПУСК
+        // ============================================================
+        document.addEventListener('DOMContentLoaded', function() {
+            initMap();
+            loadGeoJSON();
+
+            document.getElementById('regionSearch').addEventListener('input', filterRegions);
+            document.getElementById('districtFilter').addEventListener('change', filterRegions);
+
+            document.addEventListener('keydown', function(e) {
+                if (e.key === 'Escape') closePopup();
+            });
+            document.getElementById('regionPopup').addEventListener('click', function(e) {
+                if (e.target === this) closePopup();
+            });
+        });
+    </script>
 </body>
 </html>
