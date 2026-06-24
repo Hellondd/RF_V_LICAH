@@ -29,7 +29,7 @@ services:
     volumes:
       - ./backend:/app
       - uploads_data:/app/uploads
-      - ./frontend:/frontend
+      - ./frontend:/app/frontend   # <--- ИЗМЕНЕНО: теперь /app/frontend вместо /frontend
 
 volumes:
   postgres_data:
