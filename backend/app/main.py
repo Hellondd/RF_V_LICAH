@@ -28,7 +28,7 @@ app.add_middleware(
 app.include_router(api_router)
 
 # Монтируем папку frontend как статику
-app.mount("/", StaticFiles(directory="/frontend", html=True), name="frontend")
+app.mount("/", StaticFiles(directory="frontend", html=True), name="frontend")
 
 app.mount("/uploads", StaticFiles(directory="uploads"), name="uploads")
 app.mount("/images", StaticFiles(directory="static/images"), name="images")
