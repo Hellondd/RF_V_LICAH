@@ -31,7 +31,7 @@ app.include_router(api_router)
 app.mount("/", StaticFiles(directory="frontend", html=True), name="frontend")
 
 app.mount("/uploads", StaticFiles(directory="uploads"), name="uploads")
-app.mount("/images", StaticFiles(directory="static/images"), name="images")
+app.mount("/images", StaticFiles(directory="images"), name="images")
 
 # Дополнительный корневой эндпоинт на случай, если статика не сработает
 @app.get("/")
